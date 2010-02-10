@@ -1,0 +1,7 @@
+To build the SWC for this library, run the build.xml found in the root of this project with its 
+default settings.  Please note that the environment variable FLEX_HOME must be set for this build 
+to function correctly.  Please also note that the FlashBuilder project is an applicaiton setup to
+execute the FlexUnit tests using the UIListener rather than the built-in FlexUnit4 support;
+the project cannot be used as a library project.
+
+Examples coming soon.

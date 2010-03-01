@@ -1,4 +1,4 @@
-package mx.rpc.test
+package mx.rpc.http.test
 {
    import mx.rpc.AsyncToken;
    import mx.rpc.Fault;
@@ -8,15 +8,16 @@ package mx.rpc.test
    
    import org.flexunit.Assert;
    import org.flexunit.async.Async;
-   
-   public class RemoteObjectStubTest
+   import org.hamcrest.text.containsString;
+
+   public class HTTPServiceStubTest
    {
-      private var fixture : RemoteObjectStub;
+      private var fixture : HTTPServiceStub;
       
       [Before]
       public function setUp() : void
       {
-         fixture = new RemoteObjectStub("someDummyDestination");
+         fixture = new HTTPServiceStub("http://someurl.com");
       }
       
       [After]
@@ -26,22 +27,22 @@ package mx.rpc.test
       }
       
       [Test(async)]
-      public function testMethodResultWithService() : void
+      public function testSendWithResultWithService() : void
       {
-          var result : Function = 
+         var result : Function = 
             function (event : ResultEvent, passThroughData : *) : void
             {
                Assert.assertEquals("GOAL!", event.result);
             };
          
-         fixture.result("method1", null, "GOAL!");
+         fixture.result(null, null, "GOAL!");
          fixture.addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
          
-         fixture.method1();
+         fixture.send();
       }
       
       [Test(async)]
-      public function testMethodResultWithToken() : void
+      public function testSendWithResultWithToken() : void
       {
          var result : Function = 
             function (event : ResultEvent) : void
@@ -55,34 +56,34 @@ package mx.rpc.test
                Assert.fail("NO FAULTS SHOULD BE THROWN DURING THIS TEST!");
             };
          
-         fixture.result("method1", null, "GOAL!");
+         fixture.result(null, null, "GOAL!");
          
-         var token : AsyncToken = fixture.method1();
+         var token : AsyncToken = fixture.send();
          token.addResponder(Async.asyncResponder(this, new Responder(result, fault), 2000));
       }
       
       [Test(async)]
-      public function testMethodFaultWithService() : void
+      public function testSendWithFaultWithService() : void
       {
-         var expected : Fault = new Fault("0", "EPOCH FAIL", "some details");
-         
          var fault : Function = 
             function (event : FaultEvent, passThroughData : *) : void
             {
-               Assert.assertEquals(expected, event.fault);
+               var fault : Fault = event.fault;
+               Assert.assertEquals("0", fault.faultCode);
+               Assert.assertEquals("EPOCH FAIL", fault.faultString);
+               Assert.assertEquals("some details", fault.faultDetail);
+               Assert.assertNull(fault.rootCause);
             };
          
-         fixture.result("method1", null, expected);
+         fixture.fault(null, null, "0", "EPOCH FAIL", "some details");
          fixture.addEventListener(FaultEvent.FAULT, Async.asyncHandler(this, fault, 2000));
          
-         fixture.method1();
+         fixture.send();
       }
       
       [Test(async)]
-      public function testMethodFaultWithToken() : void
+      public function testSendWithFaultWithToken() : void
       {
-         var expected : Fault = new Fault("0", "EPOCH FAIL", "some details");
-         
          var result : Function = 
             function (event : ResultEvent) : void
             {
@@ -92,18 +93,24 @@ package mx.rpc.test
          var fault : Function = 
             function (event : FaultEvent) : void
             {
-               Assert.assertEquals(expected, event.fault);
+               var fault : Fault = event.fault;
+               Assert.assertEquals("0", fault.faultCode);
+               Assert.assertEquals("EPOCH FAIL", fault.faultString);
+               Assert.assertEquals("some details", fault.faultDetail);
+               Assert.assertNull(fault.rootCause);
             };
          
-         fixture.result("method1", null, expected);
+         fixture.fault(null, null, "0", "EPOCH FAIL", "some details");
          
-         var token : AsyncToken = fixture.method1();
+         var token : AsyncToken = fixture.send();
          token.addResponder(Async.asyncResponder(this, new Responder(result, fault), 2000));
       }
       
       [Test(async)]
-      public function testMethodResultWithNoParams() : void
+      public function testSetResultDataWithParametersAndHeaders() : void
       {
+         var params : Object = {query: "abcd1234", var1: containsString("attrib")};
+         var headers : Object = {Accept: "text/plain", Host: containsString("w3.org")};
          var expected : Object = {passed: true};
          
          var result : Function =
@@ -112,26 +119,10 @@ package mx.rpc.test
                Assert.assertEquals(expected, event.result);
             };
          
-         fixture.result("emptyMethod", null, expected);
+         fixture.result(params, headers, expected);
          fixture.addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
-         fixture.emptyMethod();
-      }
-      
-      [Test(async)]
-      public function testMethodResultWithParams() : void
-      {
-         var params : Array = [{query: "some query string"}, "param2", ["blah"]];
-         var expected : Object = {passed: true};
-         
-         var result : Function =
-            function (event : ResultEvent, passThroughData : * ) : void
-            {
-               Assert.assertEquals(expected, event.result);
-            };
-         
-         fixture.result("methodWithParams", params, expected);
-         fixture.addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
-         fixture.methodWithParams(params);
+         fixture.headers = {Accept: "text/plain", Host: "www.w3.org"};
+         fixture.send({query: "abcd1234", var1: "attrib1"});
       }
    }
 }

@@ -1,7 +1,6 @@
-package mx.rpc.test
+package mx.rpc.http.test
 {
    import flash.events.TimerEvent;
-   import flash.utils.Dictionary;
    import flash.utils.Timer;
    
    import mx.rpc.AsyncToken;
@@ -17,7 +16,7 @@ package mx.rpc.test
     **/
    public class HTTPServiceStub extends HTTPService
    {
-      private var _resultData : Dictionary;
+      private var _resultData : Array;
       
       //default num of milliseconds to wait before dispatching events
       //don't put too low otherwise your token responders may not be registered
@@ -29,18 +28,18 @@ package mx.rpc.test
       public function HTTPServiceStub(rootURL : String = null, destination : String = null)
       {
          super(rootURL, destination);
-         _resultData = new Dictionary();
+         _resultData = [];
       }
       
-      public function result(parameters : Object, data : *) : void
+      public function result(parameters : Object, headers : Object, data : *) : void
       {
-         _resultData[parameters] = data;
+         _resultData.push(new HTTPServiceSignature(parameters, headers, data));
       }
       
-      public function fault(parameters : Object, code : String, string : String, detail : String) : void
+      public function fault(parameters : Object, headers : Object, code : String, string : String, detail : String) : void
       {
          var fault : Fault = new Fault(code, string, detail);
-         this.result(parameters, fault);
+         this.result(parameters, headers, fault);
       }
       
       override public function send(parameters : Object = null) : AsyncToken
@@ -67,31 +66,51 @@ package mx.rpc.test
          //clean-up
          event.target.removeEventListener(TimerEvent.TIMER_COMPLETE, handleTimer);
          
+         //find matching signature
+         var result : Object = findSignatureResult(this.parameters, this.headers);
+         var resultEvent : AbstractEvent = generateEvent(result);
+         
          //loop over all responders to emulate a successful call being made
          for each(var responder : IResponder in token.responders)
          {
-           var response : Function = isFaultCall(parameters) ? responder.fault : responder.result;
-           response.apply(null, [generateEvent(parameters)]);
+           var response : Function = result is Fault ? responder.fault : responder.result;
+           response.apply(null, [resultEvent]);
          }
          
-         //dispatch event to service just in case token wasn't used
-         dispatchEvent(generateEvent(parameters));
+         //dispatch event to service
+         dispatchEvent(resultEvent);
       }
       
-      private function isFaultCall(parameters : Object) : Boolean
+      private function findSignatureResult(parameters : Object, headers : Object) : Object
       {
-         return (_resultData[parameters] is Fault);
-      }
-      
-      private function generateEvent(parameters : Object) : AbstractEvent
-      {
-         if(isFaultCall(parameters))
+         var found : HTTPServiceSignature = null;
+         
+         for each(var signature : HTTPServiceSignature in _resultData)
          {
-            return new FaultEvent(FaultEvent.FAULT, false, true, _resultData[parameters]);
+            if(signature.matches(parameters, headers))
+            {
+               found = signature;
+               break;
+            }
+         }
+         
+         if(!found)
+         {
+            throw new Error("No signature found for this call.");
+         }
+         
+         return found.result;
+      }
+      
+      private function generateEvent(result : Object) : AbstractEvent
+      {
+         if(result is Fault)
+         {
+            return new FaultEvent(FaultEvent.FAULT, false, true, result as Fault);
          }
          else
          {
-            return new ResultEvent(ResultEvent.RESULT, false, true, _resultData[parameters]);
+            return new ResultEvent(ResultEvent.RESULT, false, true, result);
          }
       }
    }

@@ -18,7 +18,7 @@ package mx.rpc.http.test.sample
       [Before]
       public function setUp() : void
       {
-         stub = new HTTPServiceStub();
+         stub = new HTTPServiceStub("http://myrestfulservice.com/person");
          stub.delay = 500;  //setup delay to emulate HTTP call, make sure to set test async timeouts longer than service delay
          
          fixture = new Person();

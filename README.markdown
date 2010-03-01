@@ -1,5 +1,10 @@
 # Flex RPC Stubs
 
+This project's goal is provide a simple to use set of stubs to supplement unit tests for objects
+with dependencies on service classes from the Flex SDK (i.e. - HTTPService, RemoteObject).  This
+project is based on a PoC described @ 
+http://www.brianlegros.com/blog/2009/02/21/using-stubs-for-httpservice-and-remoteobject-in-flex/.
+
 ## Build Instructions
 To build the SWC for this library, run the build.xml found in the root of this project with its 
 default settings.  Please note that the environment variable FLEX_HOME must be set for this build 

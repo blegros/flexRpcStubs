@@ -13,11 +13,11 @@ execute the FlexUnit tests using the UIListener rather than the built-in FlexUni
 the project cannot be used as a library project.
 
 ## Examples
-(http://github.com/blegros/flexRpcStubs/tree/master/src/test/flex/mx/rpc/http/test/sample/) - for an 
+[HTTPServiceStub Example](http://github.com/blegros/flexRpcStubs/tree/master/src/test/flex/mx/rpc/http/test/sample/) - for an 
 example using HTTPServiceStub to create a unit test for a domain/model class which has an HTTPService 
 dependency.
 
-(http://github.com/blegros/flexRpcStubs/tree/master/src/test/flex/mx/rpc/remoting/test/sample/) - for an
+[RemoteObjectStub Example](http://github.com/blegros/flexRpcStubs/tree/master/src/test/flex/mx/rpc/remoting/test/sample/) - for an
 example using RemoteObjectStub to create a unit test for controller class which has a RemotObject 
 dependency.
 

@@ -20,7 +20,7 @@ package mx.rpc.remoting.test
          methods = new Dictionary();
       }
       
-      public function result(methodName : String, args : Array,  data : *) : void
+      public function result(methodName : String, args : Array,  data : Object) : void
       {
          if(!methodName || methodName.length == 0)
          {

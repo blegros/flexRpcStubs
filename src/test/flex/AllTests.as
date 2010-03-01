@@ -5,6 +5,7 @@ package
    import mx.rpc.http.test.sample.PersonTest;
    import mx.rpc.remoting.test.RemoteObjectSignatureTest;
    import mx.rpc.remoting.test.RemoteObjectStubTest;
+   import mx.rpc.remoting.test.sample.UserControllerTest;
 
    [Suite]
    [RunWith("org.flexunit.runners.Suite")]
@@ -15,5 +16,6 @@ package
       public var remoteObjectStubTest : RemoteObjectStubTest;
       public var remoteObjectSignatureTest : RemoteObjectSignatureTest;
       public var personTest : PersonTest;
+      public var userControllerTest : UserControllerTest;
    }
 }

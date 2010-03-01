@@ -26,7 +26,7 @@ package mx.rpc.http.test.sample
       }
       
       [Test(async)]
-      public function testSaveOnCreateNotifiesOfSuccesAndUpdatesPersonState() : void
+      public function testSaveOnCreateNotifiesOfSaveAndUpdatesPerson() : void
       {
          //set the result of id 42 for a call with no ID
          stub.result(
@@ -54,7 +54,7 @@ package mx.rpc.http.test.sample
       }
       
       [Test(async)]
-      public function testSaveOnUpdateNotifiesOfSuccessAndDoesntUpdatePersonState() : void
+      public function testSaveOnUpdateNotifiesOfSaveAndDoesntUpdatePerson() : void
       {
          //set null result to be returned on update
          stub.result(

@@ -2,7 +2,7 @@
 
 This project's goal is provide a simple to use set of stubs to supplement unit tests for objects
 with dependencies on service classes from the Flex SDK (i.e. - HTTPService, RemoteObject).  This
-project is based on a PoC described @ [http://brianlegros.com/blog]
+project is based on a PoC described @ http://brianlegros.com/blog
 (http://www.brianlegros.com/blog/2009/02/21/using-stubs-for-httpservice-and-remoteobject-in-flex/).
 
 ## Build Instructions
@@ -25,6 +25,14 @@ DISCLAIMER: Please note these example unit tests are meant to serve as examples 
 intended to infer best practices or dictate preferred implementations.
 
 ## Change Log
+###0.3
+- Fixed bug with RemoteOperationStub where ResultEvent and FaultEvent were not being dispatched as
+they are on the stub itself.  Thanks to ropp.
+- Added support for the direct use of RegEx, Date, and Class in the result() and fault() methods of
+HTTPServiceStub and RemoteObjectStub rather than having to explicitly use Hamcrest matchers of the
+same type.  Borrowed the implementation from Mockolate (http://github.com/drewbourne/mockolate).
+- Add support for matching on the "method" property of HTTPService
+- Updated default delay on HTTPServiceStub to 500ms rather than 1s
 ### 0.2
 - Added support for Hamcrest matchers within parameters to HTTPServiceStub and RemoteObjectStub
 - Added support for header matching on HTTPServiceStub
@@ -34,8 +42,13 @@ intended to infer best practices or dictate preferred implementations.
 - Initial import of project
 
 ## Roadmap
-- Add a support for matching method on HTTPService
-- Add a stub for the HTTPMultiService class
-- Add a WebServiceStub
+- Add a stubs for:
+  - HTTPMultiService
+  - WebService
+  - ModuleLoader
+  - SWFLoader
+  - Image
+  - URLRequest
+  - etc
 - Add better error handling
    

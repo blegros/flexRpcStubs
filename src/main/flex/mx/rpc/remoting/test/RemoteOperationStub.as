@@ -81,6 +81,9 @@ package mx.rpc.remoting.test
 
          //send the result event to the RemoteObject
          service.dispatchEvent(resultEvent);
+         
+         //send the result event to the RemoteOperation
+         dispatchEvent(resultEvent);
       }
 
       private function findSignatureResult (args : Array) : Object

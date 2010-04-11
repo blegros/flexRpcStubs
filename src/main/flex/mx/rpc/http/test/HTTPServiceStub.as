@@ -20,7 +20,7 @@ package mx.rpc.http.test
       
       //default num of milliseconds to wait before dispatching events
       //don't put too low otherwise your token responders may not be registered
-      public var delay : Number = 1000;
+      public var delay : Number = 500;
       
       private var token : AsyncToken;
       private var parameters : Object;
@@ -31,15 +31,15 @@ package mx.rpc.http.test
          _resultData = [];
       }
       
-      public function result(parameters : Object, headers : Object, data : *) : void
+      public function result(parameters : Object, headers : Object = null, method : String = "GET", data : * = null) : void
       {
-         _resultData.push(new HTTPServiceSignature(parameters, headers, data));
+         _resultData.push(new HTTPServiceSignature(parameters, headers, method, data));
       }
       
-      public function fault(parameters : Object, headers : Object, code : String, string : String, detail : String) : void
+      public function fault(parameters : Object, headers : Object = null, method : String = "GET", code : String = null, string : String = null, detail : String = null) : void
       {
          var fault : Fault = new Fault(code, string, detail);
-         this.result(parameters, headers, fault);
+         this.result(parameters, headers, method, fault);
       }
       
       override public function send(parameters : Object = null) : AsyncToken
@@ -67,7 +67,7 @@ package mx.rpc.http.test
          event.target.removeEventListener(TimerEvent.TIMER_COMPLETE, handleTimer);
          
          //find matching signature
-         var result : Object = findSignatureResult(this.parameters, this.headers);
+         var result : Object = findSignatureResult(this.parameters, this.headers, this.method);
          var resultEvent : AbstractEvent = generateEvent(result);
          
          //loop over all responders to emulate a successful call being made
@@ -81,13 +81,13 @@ package mx.rpc.http.test
          dispatchEvent(resultEvent);
       }
       
-      private function findSignatureResult(parameters : Object, headers : Object) : Object
+      private function findSignatureResult(parameters : Object, headers : Object, method : String) : Object
       {
          var found : HTTPServiceSignature = null;
          
          for each(var signature : HTTPServiceSignature in _resultData)
          {
-            if(signature.matches(parameters, headers))
+            if(signature.matches(parameters, headers, method))
             {
                found = signature;
                break;

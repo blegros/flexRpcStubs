@@ -1,5 +1,7 @@
 package mx.rpc.remoting.test
 {
+   import mx.rpc.test.EqualityUtil;
+   
    import org.hamcrest.Matcher;
 
    public class RemoteObjectSignature
@@ -7,7 +9,7 @@ package mx.rpc.remoting.test
       private var signature : Array;
       private var _result : Object;
       
-      public function RemoteObjectSignature(params : Array, result : Object)
+      public function RemoteObjectSignature(params : Array, result : Object = null)
       {
          this.signature = params;
          this._result = result;
@@ -28,20 +30,10 @@ package mx.rpc.remoting.test
          var i : int = 0;
          for(i = 0; i < signature.length; i++)
          {
-            if(signature[i] is Matcher) //case for matchers
+            var matcher : Matcher = EqualityUtil.valueToMatcher(signature[i]);
+            if(!matcher.matches(call[i]))
             {
-               var matcher : Matcher = signature[i] as Matcher;
-               if(!matcher.matches(call[i]))
-               {
-                  return false;
-               }
-            }
-            else //case for literals
-            {
-               if(signature[i] != call[i])
-               {
-                  return false;
-               }
+               return false;
             }
          }
          

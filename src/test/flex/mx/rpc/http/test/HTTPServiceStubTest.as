@@ -35,7 +35,7 @@ package mx.rpc.http.test
                Assert.assertEquals("GOAL!", event.result);
             };
          
-         fixture.result(null, null, "GOAL!");
+         fixture.result(null, null, "GET", "GOAL!");
          fixture.addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
          
          fixture.send();
@@ -56,7 +56,7 @@ package mx.rpc.http.test
                Assert.fail("NO FAULTS SHOULD BE THROWN DURING THIS TEST!");
             };
          
-         fixture.result(null, null, "GOAL!");
+         fixture.result(null, null, "GET", "GOAL!");
          
          var token : AsyncToken = fixture.send();
          token.addResponder(Async.asyncResponder(this, new Responder(result, fault), 2000));
@@ -75,7 +75,7 @@ package mx.rpc.http.test
                Assert.assertNull(fault.rootCause);
             };
          
-         fixture.fault(null, null, "0", "EPOCH FAIL", "some details");
+         fixture.fault(null, null, "GET", "0", "EPOCH FAIL", "some details");
          fixture.addEventListener(FaultEvent.FAULT, Async.asyncHandler(this, fault, 2000));
          
          fixture.send();
@@ -100,7 +100,7 @@ package mx.rpc.http.test
                Assert.assertNull(fault.rootCause);
             };
          
-         fixture.fault(null, null, "0", "EPOCH FAIL", "some details");
+         fixture.fault(null, null, "GET", "0", "EPOCH FAIL", "some details");
          
          var token : AsyncToken = fixture.send();
          token.addResponder(Async.asyncResponder(this, new Responder(result, fault), 2000));
@@ -119,7 +119,7 @@ package mx.rpc.http.test
                Assert.assertEquals(expected, event.result);
             };
          
-         fixture.result(params, headers, expected);
+         fixture.result(params, headers, "GET", expected);
          fixture.addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
          fixture.headers = {Accept: "text/plain", Host: "www.w3.org"};
          fixture.send({query: "abcd1234", var1: "attrib1"});

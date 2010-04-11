@@ -31,7 +31,8 @@ package mx.rpc.http.test.sample
          //set the result of id 42 for a call with no ID
          stub.result(
             {id: -1, name: containsString("Dobbs"), phone: "555-5555"}, 
-            null, 
+            null,
+            "POST",
             42
          );
          
@@ -60,6 +61,7 @@ package mx.rpc.http.test.sample
          stub.result(
             {id: 87, name: "Bob Dobbs", phone: anything()}, 
             {"X-Method-Override": "PUT"}, 
+            "POST",
             null
          );
          
@@ -89,7 +91,8 @@ package mx.rpc.http.test.sample
          //Set fault to show a 404
          stub.fault(
             {id: 87, name: null, phone: null}, 
-            {"X-Method-Override": "PUT"}, 
+            {"X-Method-Override": "PUT"},
+            "POST",
             "404", 
             "Not Found", 
             "Say wha?"

@@ -38,6 +38,7 @@ package mx.rpc.remoting.test
          }
          
          methods[methodName].push(new RemoteObjectSignature(args, data));
+         operations[methodName] = new RemoteOperationStub(this, methodName, methods[methodName]);
       }
       
       public function fault(methodName : String, args : Array, code : String, string : String, detail : String, rootCause : Object) : void
@@ -46,11 +47,6 @@ package mx.rpc.remoting.test
          fault.rootCause = rootCause;
          
          this.result(methodName, args, fault);
-      }
-      
-      override public function getOperation(name : String) : AbstractOperation
-      {
-         return new RemoteOperationStub(this, name, methods[name]);
       }
    }
 }

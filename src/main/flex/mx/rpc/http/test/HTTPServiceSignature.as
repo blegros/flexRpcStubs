@@ -1,23 +1,30 @@
 package mx.rpc.http.test
 {
+   import mx.rpc.http.HTTPService;
+   import mx.rpc.test.EqualityUtil;
+   
    import org.hamcrest.Matcher;
+   import org.hamcrest.object.equalTo;
 
    public class HTTPServiceSignature
    {
       private var paramsSignature : Object;
       private var headersSignature : Object;
+      private var methodSignature : String;
       private var _result : Object;      
 
-      public function HTTPServiceSignature (params : Object, headers : Object, result : Object)
+      public function HTTPServiceSignature (params : Object, headers : Object = null, method : String = "GET", result : Object = null)
       {
          this.paramsSignature = params;
          this.headersSignature = headers;
+         this.methodSignature = method;
          this._result = result;
       }
 
-      public function matches (paramsCall : Object,  headersCall : Object = null) : Boolean
+      public function matches (paramsCall : Object,  headersCall : Object, methodCall : String) : Boolean
       {
-         return objectsMatch(paramsSignature, paramsCall) && objectsMatch(headersSignature, headersCall);
+         var methodMatches : Boolean = equalTo(methodCall.toUpperCase()).matches(methodSignature); 
+         return objectsMatch(paramsSignature, paramsCall) && objectsMatch(headersSignature, headersCall) && methodMatches;
       }
 
       private function objectsMatch (signature : Object,  call : Object) : Boolean
@@ -38,20 +45,11 @@ package mx.rpc.http.test
             {
                return false;
             }
-            else if(signature[property] is Matcher) //case for matchers
+            
+            var matcher : Matcher = EqualityUtil.valueToMatcher(signature[property]);
+            if(!matcher.matches(call[property]))
             {
-               var matcher : Matcher = signature[property] as Matcher;
-               if(!matcher.matches(call[property]))
-               {
-                  return false;
-               }
-            }
-            else //case for literals
-            {
-               if(signature[property] != call[property])
-               {
-                  return false;
-               }
+               return false;
             }
          }
 

@@ -29,6 +29,7 @@ package mx.rpc.remoting.test
       [Test]
       public function testGetOperation() : void
       {
+         fixture.result("blah", [], null);
          Assert.assertTrue(fixture.getOperation("blah") is RemoteOperationStub);
       }
       
@@ -43,6 +44,21 @@ package mx.rpc.remoting.test
          
          fixture.result("method1", null, "GOAL!");
          fixture.addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
+         
+         fixture.method1();
+      }
+      
+      [Test(async)]
+      public function testMethodResultWithOperation() : void
+      {
+         var result : Function = 
+            function (event : ResultEvent, passThroughData : *) : void
+            {
+               Assert.assertEquals("GOAL!", event.result);
+            };
+         
+         fixture.result("method1", null, "GOAL!");
+         fixture.getOperation("method1").addEventListener(ResultEvent.RESULT, Async.asyncHandler(this, result, 2000));
          
          fixture.method1();
       }
@@ -85,6 +101,27 @@ package mx.rpc.remoting.test
          
          fixture.fault("method1", null, "0", "EPOCH FAIL", "some details", rootCause);
          fixture.addEventListener(FaultEvent.FAULT, Async.asyncHandler(this, fault, 2000));
+         
+         fixture.method1();
+      }
+      
+      [Test(async)]
+      public function testMethodFaultWithOperation() : void
+      {
+         var rootCause : Object = {};
+         
+         var fault : Function = 
+            function (event : FaultEvent, passThroughData : *) : void
+            {
+               var fault : Fault = event.fault;
+               Assert.assertEquals("0", fault.faultCode);
+               Assert.assertEquals("EPOCH FAIL", fault.faultString);
+               Assert.assertEquals("some details", fault.faultDetail);
+               Assert.assertStrictlyEquals(rootCause, fault.rootCause);
+            };
+         
+         fixture.fault("method1", null, "0", "EPOCH FAIL", "some details", rootCause);
+         fixture.getOperation("method1").addEventListener(FaultEvent.FAULT, Async.asyncHandler(this, fault, 2000));
          
          fixture.method1();
       }

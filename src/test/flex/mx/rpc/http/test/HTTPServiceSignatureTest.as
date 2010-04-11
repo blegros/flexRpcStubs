@@ -13,15 +13,15 @@ package mx.rpc.http.test
       [Test]
       public function testGetResult() : void
       {
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, null, "success");
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, null, "GET", "success");
          Assert.assertEquals("success", fixture.result);
       }
       
       [Test]
       public function testMatchesWithNoParamsAndNoHeaders() : void
       {
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, null, "success");
-         Assert.assertTrue(fixture.matches(null, null));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, null, "GET", "success");
+         Assert.assertTrue(fixture.matches(null, null, "GET"));
       }
       
       [Test]
@@ -34,8 +34,8 @@ package mx.rpc.http.test
             
          var callHeaders : Object = ObjectUtil.copy(signatureHeaders);
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "success");
-         Assert.assertTrue(fixture.matches(null, callHeaders));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "GET", "success");
+         Assert.assertTrue(fixture.matches(null, callHeaders, "GET"));
       }
       
       [Test]
@@ -54,8 +54,8 @@ package mx.rpc.http.test
             
          var callParams : Object = ObjectUtil.copy(signatureParams);
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, signatureHeaders, "success");
-         Assert.assertTrue(fixture.matches(callParams, callHeaders));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, signatureHeaders, "GET", "success");
+         Assert.assertTrue(fixture.matches(callParams, callHeaders, "GET"));
       }
       
       [Test]
@@ -68,8 +68,8 @@ package mx.rpc.http.test
          
          var callParams : Object = ObjectUtil.copy(signatureParams);
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertTrue(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertTrue(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -85,8 +85,8 @@ package mx.rpc.http.test
             prop2: "value2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertTrue(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertTrue(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -102,8 +102,8 @@ package mx.rpc.http.test
             prop2: "value2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertTrue(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertTrue(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -116,8 +116,8 @@ package mx.rpc.http.test
          
          var callHeaders : Object = ObjectUtil.copy(signatureHeaders);
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "success");
-         Assert.assertTrue(fixture.matches(null, callHeaders));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "GET", "success");
+         Assert.assertTrue(fixture.matches(null, callHeaders, "GET"));
       }
       
       [Test]
@@ -133,8 +133,8 @@ package mx.rpc.http.test
             prop2: "value2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "success");
-         Assert.assertTrue(fixture.matches(null, callHeaders));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "GET", "success");
+         Assert.assertTrue(fixture.matches(null, callHeaders, "GET"));
       }
       
       [Test]
@@ -150,8 +150,8 @@ package mx.rpc.http.test
             prop2: "value2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "success");
-         Assert.assertTrue(fixture.matches(null, callHeaders));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(null, signatureHeaders, "GET", "success");
+         Assert.assertTrue(fixture.matches(null, callHeaders, "GET"));
       }
       
       [Test]
@@ -167,8 +167,8 @@ package mx.rpc.http.test
             prop2: "bad2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertFalse(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertFalse(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -184,8 +184,8 @@ package mx.rpc.http.test
             prop2: "value2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertFalse(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertFalse(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -201,8 +201,8 @@ package mx.rpc.http.test
             prop2: "value2"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertFalse(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertFalse(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -217,8 +217,8 @@ package mx.rpc.http.test
             prop1: "good"
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertFalse(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertFalse(fixture.matches(callParams, null, "GET"));
       }
       
       [Test]
@@ -235,8 +235,8 @@ package mx.rpc.http.test
             prop3: 1234
          };
          
-         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "success");
-         Assert.assertFalse(fixture.matches(callParams));
+         var fixture : HTTPServiceSignature = new HTTPServiceSignature(signatureParams, null, "GET", "success");
+         Assert.assertFalse(fixture.matches(callParams, null, "GET"));
       }
    }
 }

@@ -33,6 +33,7 @@ HTTPServiceStub and RemoteObjectStub rather than having to explicitly use Hamcre
 same type.  Borrowed the implementation from Mockolate (http://github.com/drewbourne/mockolate).
 - Add support for matching on the "method" property of HTTPService
 - Updated default delay on HTTPServiceStub to 500ms rather than 1s
+
 ### 0.2
 - Added support for Hamcrest matchers within parameters to HTTPServiceStub and RemoteObjectStub
 - Added support for header matching on HTTPServiceStub

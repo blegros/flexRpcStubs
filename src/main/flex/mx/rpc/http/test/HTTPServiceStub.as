@@ -106,11 +106,11 @@ package mx.rpc.http.test
       {
          if(result is Fault)
          {
-            return new FaultEvent(FaultEvent.FAULT, false, true, result as Fault);
+            return new FaultEvent(FaultEvent.FAULT, false, true, result as Fault, token);
          }
          else
          {
-            return new ResultEvent(ResultEvent.RESULT, false, true, result);
+            return new ResultEvent(ResultEvent.RESULT, false, true, result, token);
          }
       }
    }

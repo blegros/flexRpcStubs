@@ -52,4 +52,5 @@ same type.  Borrowed the implementation from Mockolate (http://github.com/drewbo
   - URLRequest
   - etc
 - Add better error handling
-   
+
+License Available @ http://github.com/blegros/flexRpcStubs/blob/master/LICENSE

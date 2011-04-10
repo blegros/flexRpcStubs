@@ -4,7 +4,8 @@ package mx.rpc.remoting.test
    import flash.events.TimerEvent;
    import flash.utils.Dictionary;
    import flash.utils.Timer;
-
+   
+   import mx.messaging.messages.RemotingMessage;
    import mx.rpc.AsyncToken;
    import mx.rpc.Fault;
    import mx.rpc.IResponder;
@@ -52,7 +53,11 @@ package mx.rpc.remoting.test
 
       private function configureResponseTimer (args : Array) : AsyncToken
       {
-         token = new AsyncToken(null);
+		  var message:RemotingMessage = new RemotingMessage();
+		  message.operation = name;
+		  message.body = args;
+		  token = new AsyncToken(message);
+
          this.args = args;
 
          var stub : RemoteObjectStub = RemoteObjectStub(service);
